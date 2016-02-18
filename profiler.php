@@ -248,5 +248,3 @@ class JbnProfiler
         return ini_get('xhprof.output_dir');
     }
 }
-
-new JbnProfiler();
