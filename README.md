@@ -15,7 +15,7 @@ new JbnProfiler(array(
 ));
 ```
 
-Within the construct you can override any variable by removing the leading underscore ('enableKey' to change $this->_enableKey)
+Within the construct you can override any variable by removing the leading underscore (`'enableKey'` to change `$this->_enableKey`)
 
 ```php
 <?php
