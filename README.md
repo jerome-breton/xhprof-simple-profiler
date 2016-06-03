@@ -10,6 +10,20 @@ You will need to include the profiler.php file and instanciate JbnProfiler()
 require_once 'profiler.php';
 
 new JbnProfiler(array(
+    'baseUrl' => 'http://xhprof.mywebsite.dev',
+    'baseLibPath' => '/home/nginx/xhprof-0.9.4/xhprof_lib'
+));
+```
+
+Within the construct you can override any variable by removing the leading underscore ('enableKey' to change $this->_enableKey)
+
+```php
+<?php
+require_once 'profiler.php';
+
+new JbnProfiler(array(
+    'baseUrl' => 'http://xhprof.dev.ponant.com',
+    'baseLibPath' => '/var/www/xhprof/xhprof-0.9.4/xhprof_lib',
     'allowedIp' => array(
         '10.0.0.0/8',           //Local network
         '172.16.0.0/12',        //Local network
@@ -18,8 +32,6 @@ new JbnProfiler(array(
     'enableKey' => 'xhprof'
 ));
 ```
-
-Within the construct you can override any variable by removing the leading underscore ('enableKey' to change $this->_enableKey)
 
 List of parameters is detailed in class comments.
 
