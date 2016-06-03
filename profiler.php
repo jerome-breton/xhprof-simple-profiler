@@ -2,9 +2,6 @@
 
 class JbnProfiler
 {
-    const SILENT_WORD = 'silent';
-    const ENABLE_KEY = 'XHPROF';
-    const NS_KEY = 'XHPROFNS';
 
     //Allowed ip as they can be read in $_SERVER['REMOTE_ADDR']
     //You might want to alter _getRemoteAddr() if you have a reverse proxy
@@ -15,14 +12,20 @@ class JbnProfiler
     );
 
     //Can be set to false if method is not allowed
+    protected $_enableKey = 'XHPROF';
     protected $_enableKeyGet = true;
     protected $_enableKeyPost = true;
     protected $_enableKeyCookie = true;
     protected $_enableKeyEnv = true;
 
+    //If the key is truthy with this value then the trace will be triggered but output will not be altered
+    //(footer will not be added, usefull for AJAX calls)
+    protected $_silentWord = 'silent';
+
     //This class will use $_SERVER['HTTP_HOST'] as the namespace
     //Passing this parameter will allow to prefix it with something (useful for sorting profiles)
     //You can set this parameter to false to disallow some methods
+    protected $_namespaceKey = 'XHPROFNS';
     protected $_namespaceKeyGet = true;
     protected $_namespaceKeyPost = true;
     protected $_namespaceKeyCookie = true;
@@ -38,9 +41,14 @@ class JbnProfiler
     //Base URL of XHPROF lib path
     protected $_baseLibPath = '/usr/share/php/xhprof_lib/';
 
-
-    public function __construct()
+    public function __construct($params = array())
     {
+        foreach($params as $key => $value){
+            if(!empty($value)){
+                $varName = '_'.$key;
+                $this->$varName = $value;
+            }
+        }
         if ($this->_profilerEnabled()) {
             //Tries to create dir if it as been deleted
             if(!is_dir($this->_getOutputDir())) {
@@ -98,22 +106,22 @@ class JbnProfiler
 
     private function _enableKeyGet()
     {
-        return ($this->_enableKeyGet && isset($_GET[self::ENABLE_KEY])) ? $_GET[self::ENABLE_KEY] : false;
+        return ($this->_enableKeyGet && isset($_GET[$this->_enableKey])) ? $_GET[$this->_enableKey] : false;
     }
 
     private function _enableKeyPost()
     {
-        return ($this->_enableKeyPost && isset($_POST[self::ENABLE_KEY])) ? $_POST[self::ENABLE_KEY] : false;
+        return ($this->_enableKeyPost && isset($_POST[$this->_enableKey])) ? $_POST[$this->_enableKey] : false;
     }
 
     private function _enableKeyCookie()
     {
-        return ($this->_enableKeyCookie && isset($_COOKIE[self::ENABLE_KEY])) ? $_COOKIE[self::ENABLE_KEY] : false;
+        return ($this->_enableKeyCookie && isset($_COOKIE[$this->_enableKey])) ? $_COOKIE[$this->_enableKey] : false;
     }
 
     private function _enableKeyEnv()
     {
-        return ($this->_enableKeyEnv && isset($_SERVER[self::ENABLE_KEY])) ? $_SERVER[self::ENABLE_KEY] : false;
+        return ($this->_enableKeyEnv && isset($_SERVER[$this->_enableKey])) ? $_SERVER[$this->_enableKey] : false;
     }
 
     protected function _allowed()
@@ -164,30 +172,30 @@ class JbnProfiler
 
     protected function _silentOutput()
     {
-        return ($this->_enableKeyGet() == self::SILENT_WORD)
-        || ($this->_enableKeyPost() == self::SILENT_WORD)
-        || ($this->_enableKeyCookie() == self::SILENT_WORD)
-        || ($this->_enableKeyEnv() == self::SILENT_WORD);
+        return ($this->_enableKeyGet() == $this->_silentWord)
+        || ($this->_enableKeyPost() == $this->_silentWord)
+        || ($this->_enableKeyCookie() == $this->_silentWord)
+        || ($this->_enableKeyEnv() == $this->_silentWord);
     }
 
     private function _getProfileNamespacePrefixGet()
     {
-        return ($this->_namespaceKeyGet && isset($_GET[self::NS_KEY])) ? $_GET[self::NS_KEY] : false;
+        return ($this->_namespaceKeyGet && isset($_GET[$this->_namespaceKey])) ? $_GET[$this->_namespaceKey] : false;
     }
 
     private function _getProfileNamespacePrefixPost()
     {
-        return ($this->_namespaceKeyPost && isset($_POST[self::NS_KEY])) ? $_POST[self::NS_KEY] : false;
+        return ($this->_namespaceKeyPost && isset($_POST[$this->_namespaceKey])) ? $_POST[$this->_namespaceKey] : false;
     }
 
     private function _getProfileNamespacePrefixCookie()
     {
-        return ($this->_namespaceKeyCookie && isset($_COOKIE[self::NS_KEY])) ? $_COOKIE[self::NS_KEY] : false;
+        return ($this->_namespaceKeyCookie && isset($_COOKIE[$this->_namespaceKey])) ? $_COOKIE[$this->_namespaceKey] : false;
     }
 
     private function _getProfileNamespacePrefixEnv()
     {
-        return ($this->_namespaceKeyEnv && isset($_SERVER[self::NS_KEY])) ? $_SERVER[self::NS_KEY] : false;
+        return ($this->_namespaceKeyEnv && isset($_SERVER[$this->_namespaceKey])) ? $_SERVER[$this->_namespaceKey] : false;
     }
 
     protected function _getBaseUrl()
