@@ -178,7 +178,7 @@ class JbnProfiler
         if($this->_isCli()){
             return $namespace . 'CLI';
         }
-        return $namespace . $_SERVER['HTTP_HOST'];
+        return $namespace . str_replace('.','_',$_SERVER['HTTP_HOST']);
     }
 
     protected function _silentOutput()
