@@ -59,8 +59,8 @@ class JbnProfiler
             }
 
             //Include XHProf libs
-            require_once $this->_baseLibPath . 'utils/xhprof_lib.php';
-            require_once $this->_baseLibPath . 'utils/xhprof_runs.php';
+            require_once $this->_baseLibPath . 'utils/' . $this->_getExtensionName() . '_lib.php';
+            require_once $this->_baseLibPath . 'utils/' . $this->_getExtensionName() . '_runs.php';
 
             //Register function that will stop profiling at the end
             register_shutdown_function(array($this, 'doShutdown'));
@@ -74,7 +74,15 @@ class JbnProfiler
     {
         //Stop profiling
         $profile = call_user_func($this->_getExtensionName().'_disable');
-        $manager = new XHProfRuns_Default();
+        switch($this->_getExtensionName()){
+            case 'xhprof':
+                $managerClass = 'XHProfRuns_Default'
+                break;
+            case default:
+                $managerClass = $this->_getExtensionName().'Runs_Default';
+                break;
+        }
+        $manager = new $managerClass();
         $profileId = $manager->save_run($profile, $this->_getProfileNamespace());
         $this->_displayFooter($profileId);
     }
@@ -237,7 +245,7 @@ class JbnProfiler
         );
         if ($this->_isCli()) {
             echo "\n------------------------------------------------------------------------------------------------------------\n";
-            echo "- Profile path:\t\t{$this->_getOutputDir()}/{$profileId}.{$this->_getProfileNamespace()}.xhprof\n";
+            echo "- Profile path:\t\t{$this->_getOutputDir()}/{$profileId}.{$this->_getProfileNamespace()}.{$this->_getExtensionName()}\n";
             foreach($urls as $title => $url){
                 echo "- {$title}:\t{$url}\n";
             }
