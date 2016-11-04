@@ -256,7 +256,7 @@ class JbnProfiler
      */
     protected function _getOutputDir()
     {
-        return ini_get('xhprof.output_dir');
+        return ini_get($this->_getExtensionName().'.output_dir');
     }
 
     protected function _getExtensionName()
