@@ -41,6 +41,9 @@ class JbnProfiler
     //Base URL of XHPROF lib path
     protected $_baseLibPath = '/usr/share/php/xhprof_lib/';
 
+    //XHProf Flags for profiling, defaults to CPU + MEMORY
+    protected $_flags = -1;
+
     public function __construct($params = array())
     {
         foreach($params as $key => $value){
@@ -63,14 +66,14 @@ class JbnProfiler
             register_shutdown_function(array($this, 'doShutdown'));
 
             //Begin profiling
-            xhprof_enable(XHPROF_FLAGS_CPU + XHPROF_FLAGS_MEMORY);
+            call_user_func($this->_getExtensionName().'_enable', $this->_getFlags());
         }
     }
 
     public function doShutdown()
     {
         //Stop profiling
-        $profile = xhprof_disable();
+        $profile = call_user_func($this->_getExtensionName().'_disable');
         $manager = new XHProfRuns_Default();
         $profileId = $manager->save_run($profile, $this->_getProfileNamespace());
         $this->_displayFooter($profileId);
@@ -85,7 +88,7 @@ class JbnProfiler
     {
         ini_set('display_errors', 1);
 
-        echo '<br />Extension Loaded:' . ($this->_extensionLoaded() ? 'y' : 'n');
+        echo '<br />Extension Loaded:' . ($this->_extensionLoaded() ? $this->_getExtensionName() : 'n');
         echo '<br />Get Found:' . ($this->_enableKeyGet() ? 'y' : 'n');
         echo '<br />Post Found:' . ($this->_enableKeyPost() ? 'y' : 'n');
         echo '<br />Cookie Found:' . ($this->_enableKeyCookie() ? 'y' : 'n');
@@ -96,7 +99,7 @@ class JbnProfiler
 
     protected function _extensionLoaded()
     {
-        return extension_loaded('xhprof');
+        return (bool)$this->_getExtensionName();
     }
 
     protected function _enableKeyPresent()
@@ -254,5 +257,28 @@ class JbnProfiler
     protected function _getOutputDir()
     {
         return ini_get('xhprof.output_dir');
+    }
+
+    protected function _getExtensionName()
+    {
+        if (extension_loaded('tideways')) {
+            return 'tideways';
+        } elseif(extension_loaded('xhprof')) {
+            return 'xhprof';
+        }
+        return false;
+    }
+
+    /**
+     * Get profiling flags compatible with xhprof or tideways
+     * Value can be overloaded in construct(array('flags' => XHPROF_FLAGS_CPU))
+     */
+    protected function _getFlags(){
+        if($this->_flags != -1){
+            return $this->_flags;
+        }
+        $flagsCpu = constant(strtoupper($this->_getExtensionName()).'_FLAGS_CPU');
+        $flagsMemory = constant(strtoupper($this->_getExtensionName()).'_FLAGS_MEMORY');
+        return $flagsCpu + $flagsMemory;
     }
 }
