@@ -78,7 +78,7 @@ class JbnProfiler
             case 'xhprof':
                 $managerClass = 'XHProfRuns_Default';
                 break;
-            case default:
+            default:
                 $managerClass = $this->_getExtensionName().'Runs_Default';
                 break;
         }
