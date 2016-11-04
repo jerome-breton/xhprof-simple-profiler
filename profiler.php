@@ -76,7 +76,7 @@ class JbnProfiler
         $profile = call_user_func($this->_getExtensionName().'_disable');
         switch($this->_getExtensionName()){
             case 'xhprof':
-                $managerClass = 'XHProfRuns_Default'
+                $managerClass = 'XHProfRuns_Default';
                 break;
             case default:
                 $managerClass = $this->_getExtensionName().'Runs_Default';
