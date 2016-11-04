@@ -1,7 +1,7 @@
 # xhprof-simple-profiler
 Simple class to include in order to diagnose a webpage with XHProf or Tideways
 
-XHProf or Tideways extensions must be installed.
+XHProf, UProfiler or Tideways extensions must be installed.
 
 ## Usage
 

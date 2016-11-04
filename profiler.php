@@ -261,9 +261,11 @@ class JbnProfiler
 
     protected function _getExtensionName()
     {
-        if (extension_loaded('tideways')) {
+        if (extension_loaded('uprofiler')) {
+            return 'uprofiler';
+        } else if (extension_loaded('tideways')) {
             return 'tideways';
-        } elseif(extension_loaded('xhprof')) {
+        } else if(extension_loaded('xhprof')) {
             return 'xhprof';
         }
         return false;
