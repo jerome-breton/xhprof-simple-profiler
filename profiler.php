@@ -12,7 +12,7 @@ class JbnProfiler
     );
 
     //Can be set to false if method is not allowed
-    protected $_enableKey = 'XHPROF';
+    protected $_enableKey = 'PROFILE';
     protected $_enableKeyGet = true;
     protected $_enableKeyPost = true;
     protected $_enableKeyCookie = true;
@@ -25,7 +25,7 @@ class JbnProfiler
     //This class will use $_SERVER['HTTP_HOST'] as the namespace
     //Passing this parameter will allow to prefix it with something (useful for sorting profiles)
     //You can set this parameter to false to disallow some methods
-    protected $_namespaceKey = 'XHPROFNS';
+    protected $_namespaceKey = 'PROFILENS';
     protected $_namespaceKeyGet = true;
     protected $_namespaceKeyPost = true;
     protected $_namespaceKeyCookie = true;
@@ -36,10 +36,7 @@ class JbnProfiler
     protected $_allowedCli = true;
 
     //Base URL of XHPROF html (usually found in /usr/share/php/xhprof_html after module installation)
-    protected $_baseUrl = 'http://localhost/xhprof';
-
-    //Base URL of XHPROF lib path
-    protected $_baseLibPath = '/usr/share/php/xhprof_lib/';
+    protected $_baseUrl = 'http://localhost/xhprof/html';
 
     //XHProf Flags for profiling, defaults to CPU + MEMORY
     protected $_flags = -1;
@@ -59,8 +56,8 @@ class JbnProfiler
             }
 
             //Include XHProf libs
-            require_once $this->_baseLibPath . 'utils/' . $this->_getExtensionName() . '_lib.php';
-            require_once $this->_baseLibPath . 'utils/' . $this->_getExtensionName() . '_runs.php';
+            require_once __DIR__.'/lib/utils/lib.php';
+            require_once __DIR__.'/lib/utils/runs.php';
 
             //Register function that will stop profiling at the end
             register_shutdown_function(array($this, 'doShutdown'));
@@ -74,15 +71,7 @@ class JbnProfiler
     {
         //Stop profiling
         $profile = call_user_func($this->_getExtensionName().'_disable');
-        switch($this->_getExtensionName()){
-            case 'xhprof':
-                $managerClass = 'XHProfRuns_Default';
-                break;
-            default:
-                $managerClass = $this->_getExtensionName().'Runs_Default';
-                break;
-        }
-        $manager = new $managerClass();
+        $manager = new ProfilerRuns_Default();
         $profileId = $manager->save_run($profile, $this->_getProfileNamespace());
         $this->_displayFooter($profileId);
     }
@@ -264,15 +253,19 @@ class JbnProfiler
      */
     protected function _getOutputDir()
     {
-        return ini_get($this->_getExtensionName().'.output_dir');
+        $dir = ini_get("profiler.output_dir");
+        if (empty($dir)) {
+            $dir = "/tmp";
+        }
+        return $dir;
     }
 
     protected function _getExtensionName()
     {
-        if (extension_loaded('uprofiler')) {
-            return 'uprofiler';
-        } else if (extension_loaded('tideways')) {
+        if (extension_loaded('tideways')) {
             return 'tideways';
+        } else if (extension_loaded('uprofiler')) {
+            return 'uprofiler';
         } else if(extension_loaded('xhprof')) {
             return 'xhprof';
         }

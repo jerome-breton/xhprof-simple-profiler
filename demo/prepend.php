@@ -1,5 +1,5 @@
 <?php
-require_once 'profiler.php';
+require_once '../profiler.php';
 
 new JbnProfiler(array(
     'allowedIp' => array(
