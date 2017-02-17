@@ -41,6 +41,10 @@ class JbnProfiler
     //XHProf Flags for profiling, defaults to CPU + MEMORY
     protected $_flags = -1;
 
+    //CSS passed in style attribute of the <div> and <a> added at the end of the page
+    protected $_boxStyle = 'font-size:1.5em;border:solid 0.25em red;background:white;margin:2em;clear:both;text-align: center;';
+    protected $_linkStyle = 'padding:0.5em 1em;margin:1em 0.5em;-webkit-appearance: button;-moz-appearance: button;appearance: button;text-decoration: none;color: initial;';
+
     public function __construct($params = array())
     {
         foreach($params as $key => $value){
@@ -240,9 +244,9 @@ class JbnProfiler
             }
             echo "------------------------------------------------------------------------------------------------------------\n";
         } else {
-            echo "<div style=\"font-size:20px;border:solid 5px red;background:white;margin:10px;padding:10px;clear:both;text-align: center;\">";
+            echo "<div style=\"{$this->_boxStyle}\">";
             foreach($urls as $title => $url){
-                echo "<a href=\"{$url}\" target=\"_blank\">{$title}</a><br>";
+                echo "<a href=\"{$url}\" target=\"_blank\" style=\"{$this->_linkStyle}\">{$title}</a>";
             }
             echo "</div>";
         }
