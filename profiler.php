@@ -42,8 +42,8 @@ class JbnProfiler
     protected $_flags = -1;
 
     //CSS passed in style attribute of the <div> and <a> added at the end of the page
-    protected $_boxStyle = 'font-size:1.5em;border:solid 0.25em red;background:white;margin:2em;clear:both;text-align: center;';
-    protected $_linkStyle = 'padding:0.5em 1em;margin:1em 0.5em;-webkit-appearance: button;-moz-appearance: button;appearance: button;text-decoration: none;color: initial;';
+    protected $_boxStyle = 'font-size:1.25em;border:solid 0.125em red;background:white;margin:1em;clear:both;text-align: center;';
+    protected $_linkStyle = 'padding:0.25em 0.5em;margin:0.5em 0.25em;-webkit-appearance: button;-moz-appearance: button;appearance: button;text-decoration: none;color: initial;';
 
     public function __construct($params = array())
     {
@@ -232,9 +232,9 @@ class JbnProfiler
             return;
         }
         $urls = array(
-            'Profiler output' => sprintf('%s/index.php?run=%s&source=%s', $this->_getBaseUrl(), $profileId, $this->_getProfileNamespace()),
-            'Full callgraph' => sprintf('%s/callgraph.php?run=%s&source=%s', $this->_getBaseUrl(), $profileId, $this->_getProfileNamespace()),
-            'Existing runs' => $this->_getBaseUrl()
+            '📅 Profiler' => sprintf('%s/index.php?run=%s&source=%s', $this->_getBaseUrl(), $profileId, $this->_getProfileNamespace()),
+            '🔀 Callgraph' => sprintf('%s/callgraph.php?run=%s&source=%s', $this->_getBaseUrl(), $profileId, $this->_getProfileNamespace()),
+            '🕙 Previous runs' => $this->_getBaseUrl()
         );
         if ($this->_isCli()) {
             echo "\n------------------------------------------------------------------------------------------------------------\n";
@@ -244,6 +244,11 @@ class JbnProfiler
             }
             echo "------------------------------------------------------------------------------------------------------------\n";
         } else {
+            if($this->_enableKeyCookie()){
+                $urls['❌ Disable persistence'] = 'javascript:document.cookie="' . $this->_enableKeyCookie .'=;expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/"';
+            } else {
+                $urls['📌 Enable persistence'] = 'javascript:document.cookie="' . $this->_enableKeyCookie .'=1; path=/"';
+            }
             echo "<div style=\"{$this->_boxStyle}\">";
             foreach($urls as $title => $url){
                 echo "<a href=\"{$url}\" target=\"_blank\" style=\"{$this->_linkStyle}\">{$title}</a>";
