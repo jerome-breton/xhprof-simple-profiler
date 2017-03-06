@@ -186,7 +186,7 @@ class JbnProfiler
     //Try to detect non HTML responses such as binary or XHR to not break them
     protected function _isNotHtml(){
         return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') //Browser XHR header
-            || (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'],'html') === false)                             //Browser does not expect HTML
+            || (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'],'html') === false);                            //Browser does not expect HTML
     }
 
     private function _getProfileNamespacePrefixGet()
