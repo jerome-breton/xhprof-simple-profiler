@@ -252,9 +252,9 @@ class JbnProfiler
             echo "------------------------------------------------------------------------------------------------------------\n";
         } else {
             if($this->_enableKeyCookie()){
-                $urls['❌ Disable persistence'] = 'javascript:(function(){document.cookie=\'' . $this->_enableKeyCookie .'=;expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/\')()';
+                $urls['❌ Disable persistence'] = 'javascript:(function(){document.cookie=\'' . $this->_enableKeyCookie .'=;expires=Thu, 01 Jan 1970 00:00:01 GMT; path=/\'})()';
             } else {
-                $urls['📌 Enable persistence'] = 'javascript:(function(){document.cookie=\'' . $this->_enableKeyCookie .'=1; path=/\')()';
+                $urls['📌 Enable persistence'] = 'javascript:(function(){document.cookie=\'' . $this->_enableKeyCookie .'=1; path=/\'})()';
             }
             echo "<div style=\"{$this->_boxStyle}\">";
             foreach($urls as $title => $url){
