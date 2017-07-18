@@ -42,4 +42,4 @@ List of parameters is detailed in class comments.
 You can put those instructions in a prepend.php file that you can include in your php file to diagnose
 or via [auto_prepend_file](http://php.net/manual/ini.core.php#ini.auto-prepend-file) directive in your php.ini
 
-You can define the `profiler.output_dir` PHP param in order to write traces in the folder you want. By default, it will output them in /tmp
+You can define the `xhprof.output_dir`,`uprofiler.output_dir` or `tideways.output_dir` PHP param in order to write traces in the folder you want. By default, it will output them in /tmp
