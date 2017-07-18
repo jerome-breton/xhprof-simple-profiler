@@ -85,27 +85,27 @@ class ProfilerRuns_Default implements iProfilerRuns {
   }
 
   public function __construct($dir = null) {
-
     // if user hasn't passed a directory location,
-    // we use the profiler.output_dir ini setting
-    // if specified, else we default to the directory
-    // in which the error_log file resides.
-
-    if (empty($dir)) {
-      $dir = ini_get("profiler.output_dir");
-      if (empty($dir)) {
-
-        // some default that at least works on unix...
-        $dir = "/tmp";
-
-        profiler_error("Warning: Must specify directory location for profiler runs. ".
-                     "Trying {$dir} as default. You can either pass the " .
-                     "directory location as an argument to the constructor ".
-                     "for ProfilerRuns_Default() or set profiler.output_dir ".
-                     "ini param.");
-      }
+    // we use the xxx.output_dir ini setting
+    // if specified, else we default to the
+    // ../../traces directory (next to html and lib)
+    $dirs = array(
+        $dir,
+        ini_get("uprofiler.output_dir"),
+        ini_get("xhprof.output_dir"),
+        '../traces',
+        sys_get_temp_dir().'/simple-profiler',
+        '/tmp'
+    );
+    foreach($dirs as $possibleDir){
+        if(!empty($possibleDir)
+        && (is_dir($possibleDir) || @mkdir($possibleDir, 0777, true))
+        && is_writable($possibleDir)){
+            $this->dir = $possibleDir;
+            return;
+        }
     }
-    $this->dir = $dir;
+    die("Impossible to find a valid output dir.\n<br>\n".__FILE__);
   }
 
   public function get_run($run_id, $type, &$run_desc) {
