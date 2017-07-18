@@ -84,29 +84,32 @@ class ProfilerRuns_Default implements iProfilerRuns {
     return $file;
   }
 
-  public function __construct($dir = null) {
-    // if user hasn't passed a directory location,
-    // we use the xxx.output_dir ini setting
-    // if specified, else we default to the
-    // ../../traces directory (next to html and lib)
-    $dirs = array(
+    public function __construct($dir = null)
+    {
+      // if user hasn't passed a directory location,
+      // we use the xxx.output_dir ini setting
+      // if specified, else we default to the
+      // traces directory (next to html and lib)
+      $dirs = array(
         $dir,
+        get_cfg_var("profiler.output_dir"),
         ini_get("uprofiler.output_dir"),
         ini_get("xhprof.output_dir"),
         '../traces',
-        sys_get_temp_dir().'/simple-profiler',
+        sys_get_temp_dir() . '/simple-profiler',
         '/tmp'
-    );
-    foreach($dirs as $possibleDir){
-        if(!empty($possibleDir)
-        && (is_dir($possibleDir) || @mkdir($possibleDir, 0777, true))
-        && is_writable($possibleDir)){
-            $this->dir = $possibleDir;
-            return;
+      );
+      foreach ($dirs as $possibleDir) {
+        if (!empty($possibleDir)
+          && (is_dir($possibleDir) || @mkdir($possibleDir, 0777, true))
+          && is_writable($possibleDir)
+        ) {
+          $this->dir = $possibleDir;
+          return;
         }
+      }
+      die("Impossible to find a valid output dir.\n<br>\n" . __FILE__);
     }
-    die("Impossible to find a valid output dir.\n<br>\n".__FILE__);
-  }
 
   public function get_run($run_id, $type, &$run_desc) {
     $file_name = $this->file_name($run_id, $type);

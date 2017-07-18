@@ -1,4 +1,4 @@
-# xhprof-simple-profiler
+# simple-profiler
 Simple class to include in order to diagnose a PHP webpage with XHProf or Tideways. An open-source alternative to Blackfire.io.
 
 [Tideways](https://github.com/tideways/php-profiler-extension), [UProfiler](https://github.com/FriendsOfPHP/uprofiler) or [XHProf](https://github.com/phacility/xhprof) extensions must be installed.
@@ -42,4 +42,24 @@ List of parameters is detailed in class comments.
 You can put those instructions in a prepend.php file that you can include in your php file to diagnose
 or via [auto_prepend_file](http://php.net/manual/ini.core.php#ini.auto-prepend-file) directive in your php.ini
 
-You can define the `xhprof.output_dir`,`uprofiler.output_dir` or `tideways.output_dir` PHP param in order to write traces in the folder you want. By default, it will output them in /tmp
+You can define the `profiler.output_dir` PHP param in order to write traces in the folder you want. `xhprof.output_dir`
+and `uprofiler.output_dir` will also work for retro-compatiblity reasons. By default, it will output them in a `traces`
+directory in this folder (near to `html` and `lib`) if writable or in a subdirectory of your system temporary
+folder (`/tmp/simple-profiler`).
+
+## Visualisation only
+
+This project can also be used to view XHProf traces built by another way (ie : you can get traces from [Quanta](https://www.quanta-computing.com/)).
+
+The faster way to do this is to use [Docker](https://www.docker.com/) :
+
+1. Install Docker
+2. Checkout this project
+3. Build the docker image `docker build -t jeromebreton/xhprof-simple-gui:source .`
+4. Create and run the container `docker run --rm -p 3731:80 --name jeromebreton-xhprof-simple-gui -v "`pwd`/traces":/traces jeromebreton/xhprof-simple-gui:source`
+5. Put your XHProf traces in the `traces` folder
+6. Open your browser to http://127.0.0.1:3731
+
+To make it easier, steps 3 and 4 are packaged in `./docker-build-n-run.sh`
+
+
