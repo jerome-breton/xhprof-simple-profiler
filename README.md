@@ -51,8 +51,12 @@ The faster way to do this is to use [Docker](https://www.docker.com/) :
 
 1. Install Docker
 2. Checkout this project
-3. Build the docker image `docker build -t jeromebreton/xhprof-simple-viewer:source .`
-4. Create and run the container `docker run --rm -p 3731:80 --name jeromebreton-xhprof-simple-viewer -v "`pwd`/traces":/traces jeromebreton/xhprof-simple-viewer:source`
+3. Build the docker image
+
+        docker build -t jeromebreton/xhprof-simple-gui:source .
+4. Create and run the container
+
+        docker run --rm -p 3731:80 --name jeromebreton-xhprof-simple-gui -v "`pwd`/traces":/traces jeromebreton/xhprof-simple-gui:source
 5. Put your XHProf traces in the `traces` folder
 6. Open your browser to http://127.0.0.1:3731
 
