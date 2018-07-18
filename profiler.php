@@ -11,6 +11,9 @@ class JbnProfiler
         '192.168.0.0/16',       //Local network
     );
 
+    //Folder used to save profiler output
+    protected $_outputDir = __DIR__.'/traces';
+
     //Can be set to false if method is not allowed
     protected $_enableKey = 'PROFILE';
     protected $_enableKeyGet = true;
@@ -55,8 +58,8 @@ class JbnProfiler
         }
         if ($this->_profilerEnabled()) {
             //Tries to create dir if it as been deleted
-            if(!is_dir($this->_getOutputDir())) {
-                mkdir($this->_getOutputDir(), 0777, true);
+            if(!is_dir($this->_outputDir)) {
+                mkdir($this->_outputDir, 0777, true);
             }
 
             //Include XHProf libs
@@ -245,7 +248,7 @@ class JbnProfiler
         );
         if ($this->_isCli()) {
             echo "\n------------------------------------------------------------------------------------------------------------\n";
-            echo "- Profile path:\t\t{$this->_getOutputDir()}/{$profileId}.{$this->_getProfileNamespace()}.{$this->_getExtensionName()}\n";
+            echo "- Profile path:\t\t{$this->_outputDir}/{$profileId}.{$this->_getProfileNamespace()}.{$this->_getExtensionName()}\n";
             foreach($urls as $title => $url){
                 echo "- {$title}:\t{$url}\n";
             }
@@ -264,21 +267,11 @@ class JbnProfiler
         }
     }
 
-    /**
-     * @return string
-     */
-    protected function _getOutputDir()
-    {
-        $dir = ini_get($this->_getExtensionName() . ".output_dir");
-        if (empty($dir)) {
-            $dir = "/tmp";
-        }
-        return $dir;
-    }
-
     protected function _getExtensionName()
     {
-        if (extension_loaded('tideways')) {
+        if (extension_loaded('tideways_xhprof')) {
+            return 'tideways_xhprof';
+        } else if (extension_loaded('tideways')) {
             return 'tideways';
         } else if (extension_loaded('uprofiler')) {
             return 'uprofiler';

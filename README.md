@@ -33,6 +33,7 @@ new JbnProfiler(array(
         '172.16.0.0/12',        //Local network
         '192.168.0.0/16',       //Local network
     ),
+    'outputDir' => '/tmp/profiler-traces',
     'enableKey' => 'xhprof'
 ));
 ```
@@ -41,11 +42,6 @@ List of parameters is detailed in class comments.
 
 You can put those instructions in a prepend.php file that you can include in your php file to diagnose
 or via [auto_prepend_file](http://php.net/manual/ini.core.php#ini.auto-prepend-file) directive in your php.ini
-
-You can define the `profiler.output_dir` PHP param in order to write traces in the folder you want. `xhprof.output_dir`
-and `uprofiler.output_dir` will also work for retro-compatiblity reasons. By default, it will output them in a `traces`
-directory in this folder (near to `html` and `lib`) if writable or in a subdirectory of your system temporary
-folder (`/tmp/simple-profiler`).
 
 ## Visualisation only
 
@@ -61,5 +57,4 @@ The faster way to do this is to use [Docker](https://www.docker.com/) :
 6. Open your browser to http://127.0.0.1:3731
 
 To make it easier, steps 3 and 4 are packaged in `./docker-build-n-run.sh`
-
 

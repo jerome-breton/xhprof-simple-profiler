@@ -92,10 +92,6 @@ class ProfilerRuns_Default implements iProfilerRuns {
       // traces directory (next to html and lib)
       $dirs = array(
         $dir,
-        get_cfg_var("profiler.output_dir"),
-        ini_get("uprofiler.output_dir"),
-        ini_get("xhprof.output_dir"),
-        '../traces',
         sys_get_temp_dir() . '/simple-profiler',
         '/tmp'
       );
