@@ -84,28 +84,42 @@ class ProfilerRuns_Default implements iProfilerRuns {
     return $file;
   }
 
-    public function __construct($dir = null)
-    {
-      // if user hasn't passed a directory location,
-      // we use the xxx.output_dir ini setting
-      // if specified, else we default to the
-      // traces directory (next to html and lib)
-      $dirs = array(
-        $dir,
-        sys_get_temp_dir() . '/simple-profiler',
-        '/tmp'
-      );
-      foreach ($dirs as $possibleDir) {
-        if (!empty($possibleDir)
-          && (is_dir($possibleDir) || @mkdir($possibleDir, 0777, true))
-          && is_writable($possibleDir)
-        ) {
-          $this->dir = $possibleDir;
-          return;
-        }
+  public function __construct($dir = null)
+  {
+    // take the first usable dir from this list
+    $dirs = array(
+      $dir,
+      getenv('PROFILER_PATH'),
+      dirname(dirname(__DIR__)) . '/traces',
+      sys_get_temp_dir() . '/simple-profiler',
+      '/tmp'
+    );
+    foreach ($dirs as $possibleDir) {
+      if (!empty($possibleDir)
+        && (is_dir($possibleDir) || @mkdir($possibleDir, 0777, true))
+        && is_writable($possibleDir)
+      ) {
+        $this->dir = $possibleDir;
+        break;
       }
+    }
+    
+    if(empty($this->dir)){
       die("Impossible to find a valid output dir.\n<br>\n" . __FILE__);
     }
+
+    if(!empty($suffix = getenv('PROFILER_SUFFIX'))){
+      $this->suffix = $suffix;
+    }
+  }
+
+  public function get_dir(){
+    return $this->dir;
+  }
+
+  public function get_suffix(){
+    return $this->suffix;
+  }
 
   public function get_run($run_id, $type, &$run_desc) {
     $file_name = $this->file_name($run_id, $type);

@@ -33,7 +33,6 @@ new JbnProfiler(array(
         '172.16.0.0/12',        //Local network
         '192.168.0.0/16',       //Local network
     ),
-    'outputDir' => '/tmp/profiler-traces',
     'enableKey' => 'xhprof'
 ));
 ```
@@ -62,3 +61,4 @@ The faster way to do this is to use [Docker](https://www.docker.com/) :
 
 To make it easier, steps 3 and 4 are packaged in `./docker-build-n-run.sh`
 
+You can use environment variables `PROFILER_PATH` and `PROFILER_SUFFIX` to use different folders or file extension (defaults to /traces/*.xhprof)

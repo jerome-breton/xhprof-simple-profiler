@@ -11,9 +11,6 @@ class JbnProfiler
         '192.168.0.0/16',       //Local network
     );
 
-    //Folder used to save profiler output
-    protected $_outputDir = __DIR__.'/traces';
-
     //Can be set to false if method is not allowed
     protected $_enableKey = 'PROFILE';
     protected $_enableKeyGet = true;
@@ -48,6 +45,9 @@ class JbnProfiler
     protected $_boxStyle = 'font-size:1.25em;border:solid 0.125em red;background:white;margin:1em;clear:both;text-align: center;';
     protected $_linkStyle = 'padding:0.25em 0.5em;margin:0.5em 0.25em;-webkit-appearance: button;-moz-appearance: button;appearance: button;text-decoration: none;color: initial;';
 
+    /** @var ProfilerRuns_Default */
+    private $_manager;
+
     public function __construct($params = array())
     {
         foreach($params as $key => $value){
@@ -65,6 +65,8 @@ class JbnProfiler
             //Include XHProf libs
             require_once __DIR__.'/lib/utils/lib.php';
             require_once __DIR__.'/lib/utils/runs.php';
+            $this->_manager = new ProfilerRuns_Default();
+
 
             //Register function that will stop profiling at the end
             register_shutdown_function(array($this, 'doShutdown'));
@@ -78,8 +80,7 @@ class JbnProfiler
     {
         //Stop profiling
         $profile = call_user_func($this->_getExtensionName().'_disable');
-        $manager = new ProfilerRuns_Default();
-        $profileId = $manager->save_run($profile, $this->_getProfileNamespace());
+        $profileId = $this->_manager->save_run($profile, $this->_getProfileNamespace());
         $this->_displayFooter($profileId);
     }
 
@@ -248,7 +249,7 @@ class JbnProfiler
         );
         if ($this->_isCli()) {
             echo "\n------------------------------------------------------------------------------------------------------------\n";
-            echo "- Profile path:\t\t{$this->_outputDir}/{$profileId}.{$this->_getProfileNamespace()}.{$this->_getExtensionName()}\n";
+            echo "- Profile path:\t\t{$this->_manager->get_dir()}/{$profileId}.{$this->_getProfileNamespace()}.{$this->_manager->get_suffix()}\n";
             foreach($urls as $title => $url){
                 echo "- {$title}:\t{$url}\n";
             }
