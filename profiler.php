@@ -48,7 +48,7 @@ class JbnProfiler
     /** @var ProfilerRuns_Default */
     private $_manager;
 
-    public function __construct($params = array())
+    public function __construct($params = array(), $debug = false)
     {
         foreach($params as $key => $value){
             if(!empty($value)){
@@ -56,12 +56,10 @@ class JbnProfiler
                 $this->$varName = $value;
             }
         }
+        if ($debug) {
+            $this->debugProfilerEnabled();
+        }
         if ($this->_profilerEnabled()) {
-            //Tries to create dir if it as been deleted
-            if(!is_dir($this->_outputDir)) {
-                mkdir($this->_outputDir, 0777, true);
-            }
-
             //Include XHProf libs
             require_once __DIR__.'/lib/utils/lib.php';
             require_once __DIR__.'/lib/utils/runs.php';
