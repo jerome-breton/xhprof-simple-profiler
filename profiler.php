@@ -35,8 +35,8 @@ class JbnProfiler
     //Allows or disallow CLI usage of profiler
     protected $_allowedCli = true;
 
-    //Base URL of XHPROF html (usually found in /usr/share/php/xhprof_html after module installation)
-    protected $_baseUrl = 'http://localhost/xhprof/html';
+    //Base URL of the html folder of this projet
+    protected $_baseUrl = 'http://localhost/html';
 
     //XHProf Flags for profiling, defaults to CPU + MEMORY
     protected $_flags = -1;
