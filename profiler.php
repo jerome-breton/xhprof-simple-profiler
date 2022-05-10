@@ -38,6 +38,10 @@ class JbnProfiler
     //Base URL of the html folder of this projet
     protected $_baseUrl = 'http://localhost/html';
 
+    //Directory for saving traces. Defaults to the first writable dir in:
+    // $this->_traceDir, getenv('PROFILER_PATH'), ./traces, sys_get_temp_dir() . '/simple-profiler', '/tmp'
+    protected $_tracesDir = null;
+
     //XHProf Flags for profiling, defaults to CPU + MEMORY
     protected $_flags = -1;
 
@@ -63,7 +67,7 @@ class JbnProfiler
             //Include XHProf libs
             require_once __DIR__.'/lib/utils/lib.php';
             require_once __DIR__.'/lib/utils/runs.php';
-            $this->_manager = new ProfilerRuns_Default();
+            $this->_manager = new ProfilerRuns_Default($this->_tracesDir);
 
 
             //Register function that will stop profiling at the end
