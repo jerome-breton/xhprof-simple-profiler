@@ -455,6 +455,10 @@ function profiler_report ($url_params,
   global $diff_mode;
   global $base_path;
 
+  if(empty($run1_data)){
+      $run1_data = array();
+  }
+
   // if we are reporting on a specific function, we can trim down
   // the report(s) to just stuff that is relevant to this function.
   // That way compute_flat_info()/compute_diff() etc. do not have
@@ -529,7 +533,6 @@ function profiler_report ($url_params,
 
   echo profiler_render_actions($links);
 
-
   echo
     '<dl class=phprof_report_info>' .
     '  <dt>' . $diff_text . ' Report</dt>' .
@@ -541,6 +544,10 @@ function profiler_report ($url_params,
     '  <dd>Click a function name below to drill down.</dd>' .
     '</dl>' .
     '<div style="clear: both; margin: 3em 0em;"></div>';
+
+  if(empty($run1_data)){
+    return;
+  }
 
   // data tables
   if (!empty($rep_symbol)) {

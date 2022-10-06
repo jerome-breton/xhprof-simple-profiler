@@ -104,6 +104,18 @@ class JbnProfiler
         echo 'Allowed:' . ($this->_allowed() ? 'y' : 'n');
     }
 
+    public function debugTracesFolder()
+    {
+        ini_set('display_errors', 1);
+
+        $filename = $this->_tracesDir.'/touch';
+
+        echo '<br />Traces dir:' . $this->_tracesDir;
+        echo '<br />Writable:' . (is_writable($this->_tracesDir) ? 'y' : 'n');
+        echo '<br />Write success:' . (touch($filename) ? 'y' : 'n');
+        echo '<br />Delete success:' . (unlink($filename) ? 'y' : 'n');
+    }
+
     protected function _extensionLoaded()
     {
         return (bool)$this->_getExtensionName();
@@ -264,7 +276,13 @@ class JbnProfiler
             }
             echo "<div style=\"{$this->_boxStyle}\">";
             foreach($urls as $title => $url){
-                echo "<a href=\"{$url}\" target=\"_blank\" style=\"{$this->_linkStyle}\">{$title}</a>";
+                $pos = strpos($url, 'javascript:');
+                if($pos === 0){
+                    $js = substr($url,11);
+                    echo "<a href=\"#\" onclick=\"{$js}\" style=\"{$this->_linkStyle}\">{$title}</a>";
+                } else {
+                    echo "<a href=\"{$url}\" target=\"_blank\" style=\"{$this->_linkStyle}\">{$title}</a>";
+                }
             }
             echo "</div>";
         }
