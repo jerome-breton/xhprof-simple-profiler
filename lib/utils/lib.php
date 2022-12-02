@@ -589,12 +589,12 @@ function profiler_compute_inclusive_times($raw_data) {
       profiler_error("Error in Raw Data: parent & child are both: $parent");
       
       /**
-       * I am adding this continue here because on certain tideways_hxprof logs 
-       * this fails spectacularly, givind a null value to a foreach causing a warning
-       * and nothing to be outputted. We can safely just continue traversing
-       * the array ignoring this single case
-       */
-       continue;  
+      * I am adding this continue here because on certain tideways_xhprof logs 
+      * this fails spectacularly, givind a null value to a foreach causing a warning
+      * and nothing to be outputted. We can safely just continue traversing
+      * the array ignoring this single case
+      */
+      continue;
     }
 
     if (!isset($symbol_tab[$child])) {
@@ -910,10 +910,6 @@ function profiler_param_init($params) {
       profiler_error("Invalid param type passed to profiler_param_init: "
                    . $v[0]);
       exit();
-    }
-
-    if ($k === 'run') {
-      $p = implode(',', array_filter(explode(',', $p), 'ctype_xdigit'));
     }
 
     // create a global variable using the parameter name.

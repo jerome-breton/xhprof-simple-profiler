@@ -31,4 +31,4 @@ COPY ./html /var/www/html/
 COPY ./lib /var/www/lib/
 
 #This is where you should link your XHProf traces
-VOLUME ["/var/www/traces"]
+VOLUME ["/traces"]

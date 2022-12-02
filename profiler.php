@@ -38,6 +38,10 @@ class JbnProfiler
     //Base URL of the html folder of this projet
     protected $_baseUrl = 'http://localhost/html';
 
+    //Directory for saving traces. Defaults to the first writable dir in:
+    // $this->_traceDir, getenv('PROFILER_PATH'), ./traces, sys_get_temp_dir() . '/simple-profiler', '/tmp'
+    protected $_tracesDir = null;
+
     //XHProf Flags for profiling, defaults to CPU + MEMORY
     protected $_flags = -1;
 
@@ -63,7 +67,7 @@ class JbnProfiler
             //Include XHProf libs
             require_once __DIR__.'/lib/utils/lib.php';
             require_once __DIR__.'/lib/utils/runs.php';
-            $this->_manager = new ProfilerRuns_Default();
+            $this->_manager = new ProfilerRuns_Default($this->_tracesDir);
 
 
             //Register function that will stop profiling at the end
@@ -98,6 +102,18 @@ class JbnProfiler
         echo '<br />CLI:' . ($this->_isCli() ? 'y' : 'n');
         echo '<br />IP:' . $this->_getRemoteAddr();
         echo 'Allowed:' . ($this->_allowed() ? 'y' : 'n');
+    }
+
+    public function debugTracesFolder()
+    {
+        ini_set('display_errors', 1);
+
+        $filename = $this->_tracesDir.'/touch';
+
+        echo '<br />Traces dir:' . $this->_tracesDir;
+        echo '<br />Writable:' . (is_writable($this->_tracesDir) ? 'y' : 'n');
+        echo '<br />Write success:' . (touch($filename) ? 'y' : 'n');
+        echo '<br />Delete success:' . (unlink($filename) ? 'y' : 'n');
     }
 
     protected function _extensionLoaded()
@@ -260,7 +276,13 @@ class JbnProfiler
             }
             echo "<div style=\"{$this->_boxStyle}\">";
             foreach($urls as $title => $url){
-                echo "<a href=\"{$url}\" target=\"_blank\" style=\"{$this->_linkStyle}\">{$title}</a>";
+                $pos = strpos($url, 'javascript:');
+                if($pos === 0){
+                    $js = substr($url,11);
+                    echo "<a href=\"#\" onclick=\"{$js}\" style=\"{$this->_linkStyle}\">{$title}</a>";
+                } else {
+                    echo "<a href=\"{$url}\" target=\"_blank\" style=\"{$this->_linkStyle}\">{$title}</a>";
+                }
             }
             echo "</div>";
         }
