@@ -589,7 +589,7 @@ function profiler_compute_inclusive_times($raw_data) {
       profiler_error("Error in Raw Data: parent & child are both: $parent");
       
       /**
-      * I am adding this continue here because on certain tideways_hxprof logs 
+      * I am adding this continue here because on certain tideways_xhprof logs 
       * this fails spectacularly, givind a null value to a foreach causing a warning
       * and nothing to be outputted. We can safely just continue traversing
       * the array ignoring this single case
