@@ -1,11 +1,10 @@
 # simple-profiler
 Simple class to include in order to diagnose a PHP webpage with XHProf or Tideways. An open-source alternative to Blackfire.io.
 
-[Tideways](https://github.com/tideways/php-profiler-extension), [UProfiler](https://github.com/FriendsOfPHP/uprofiler) or [XHProf](https://github.com/phacility/xhprof) extensions must be installed.
-
-Nowadays, Tideways is the only one supporting PHP 7 and PHP 5.6 ;
-Uprofiler is compatible with PHP 5.6 and lower ;
-XHProf is compatible with PHP 5.5 and lower.
+An XHProf-fork extension must be installed. Nowadays (end of 2022) :
+- [Tideways](https://github.com/tideways/php-profiler-extension) supports PHP 7.x and PHP 8.0 and is not maintained anymore ;
+- [UProfiler](https://github.com/FriendsOfPHP/uprofiler) is compatible with PHP 5.6 and lower and is not maintained anymore ;
+- [XHProf](https://pecl.php.net/package/xhprof) is compatible with PHP 7.2 to PHP 8.2.
 
 ## Usage
 
@@ -62,3 +61,6 @@ The faster way to do this is to use [Docker](https://www.docker.com/) :
 To make it easier, steps 3 and 4 are packaged in `./docker-build-n-run.sh`
 
 You can use environment variables `PROFILER_PATH` and `PROFILER_SUFFIX` to use different folders or file extension (defaults to /traces/*.xhprof)
+
+## Note
+The two folders `html` and `lib` are mainly extracted from `xhprof_html` and `xhprof_lib` folders of the original [XHProf project](https://github.com/phacility/xhprof) because Tideways had stripped it.
