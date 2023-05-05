@@ -1,5 +1,7 @@
 FROM php:7.0-apache
 
+RUN echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list
+
 #Install Graphviz (dot binary is used to display graphs)
 # and build extension essentials
 RUN apt-get update && \
